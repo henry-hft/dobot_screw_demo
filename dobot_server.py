@@ -1,9 +1,9 @@
+from dobot_handler import dobot_handler
 from flask import Flask, request, jsonify, Response, send_from_directory
 import time
 import json
 import threading
 import os
-from dobot_api import dobot_api_dashboard, dobot_api_feedback
 import image_processing
 import img_handle
 import control
@@ -13,8 +13,7 @@ import glob
 file_write_lock = threading.Lock()
 app = Flask(__name__)
 
-cld = None
-clf = None
+dobot = None
 obj_pixel_coord = None
 calib_values = None
 get_position_flag = True
@@ -34,23 +33,21 @@ def set_calibration_values():
     return jsonify({"message": "Calibration values set."})
 
 def initialize_dobot(dobot_ip="192.168.1.6", speed=80):
-    global cld, clf
+    global dobot
     try:
-        cld = dobot_api_dashboard(dobot_ip, 29999)
-        clf = dobot_api_feedback(dobot_ip, 30003)
-        result = "Dobot initialized successfully"
-        return True, result
-
-    except Exception as e:
-        result = f"Connection could not be established: {str(e)}"
-        return False, result
+        dobot = dobot_handler(dobot_ip)
+        return True, "Connection established"
+    except Exception as error:
+        return False, "Connection failed"
 
 
 # Initialize Dobot before the first request
 @app.before_first_request
 def setup():
     success, message = initialize_dobot()
-    if not success:
+    if success:
+        dobot.start()
+    else:
         return message
 
 # Initialize Dobot before the first request
@@ -88,14 +85,14 @@ def stopProcess():
 # Clear Dobot error
 @app.route("/clear_error", methods=["GET"])
 def clearError():
-    cld.ClearError()
+    dobot.dashboard.ClearError()
     time.sleep(2)
     return jsonify({"message": "Clear Error"})
 
 # reset Dobot
 @app.route("/reset_dobot", methods=["GET"])
 def resetDobot():
-    cld.ResetRobot()
+    dobot.dashboard.ResetRobot()
     time.sleep(2)
     return jsonify({"message": "rest dobot"})
 
@@ -103,15 +100,15 @@ def resetDobot():
 # Get Dobot error ID
 @app.route("/get_error_id", methods=["GET"])
 def getErrorId():
-    return jsonify({"errorIds": cld.GetErrorID()})
+    return jsonify({"errorIds": dobot.dashboard.GetErrorID()})
 
 
 # Enable Dobot
 @app.route("/enable", methods=["GET"])
 def enableRobot():
     try:
-        cld.ClearError ()
-        cld.EnableRobot(0.325, 0.0, 0.0, 0.0)
+        dobot.dashboard.ClearError ()
+        dobot.dashboard.EnableRobot(0.325, 0.0, 0.0, 0.0)
         return jsonify({"message": "Dobot is enabled"})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -120,31 +117,31 @@ def enableRobot():
 # Disable Dobot
 @app.route("/disable", methods=["GET"])
 def disableRobot():
-    cld.DisableRobot()
+    dobot.dashboard.DisableRobot()
     return jsonify({"message": "Dobot is disabled"})
 
 
 # Get Dobot mode
 @app.route("/get_dobot_mode", methods=["GET"])
 def getDobotMode():
-    return jsonify({"mode": cld.RobotMode()})
+    return jsonify({"mode": dobot.dashboard.RobotMode()})
 
 
 @app.route("/open_gripper", methods=["GET"])
 def open_gripper():
-    cld.DOExecute(8, 1)
+    dobot.setDO(8, 1)
     return jsonify({"message": "open gripper"})
 
 @app.route("/close_gripper", methods=["GET"])
 def close_gripper():
-    cld.DOExecute(8, 0)
+    dobot.setDO(8, 0)
     return jsonify({"message": "close Gripper"})
 
 
 @app.route("/get_dobot_position", methods=["GET"])
 def get_dobot_position():
     try:
-        dobot_position = cld.GetPose()
+        dobot_position = dobot.dashboard.GetPose()
         return jsonify({"position": dobot_position})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -152,28 +149,21 @@ def get_dobot_position():
 # Move to start photo position
 @app.route("/move_to_start_foto_pos", methods=["POST"])
 def move_to_start_foto_pos():
-    cld.EnableRobot(0.325, 0.0, 0.0, 0.0)
+    dobot.dashboard.EnableRobot(0.325, 0.0, 0.0, 0.0)
 
     dobot_coords = request.get_json()
     if dobot_coords:
-        clf.MovL(
-            dobot_coords["x"],
-            dobot_coords["y"],
-            dobot_coords["z"],
-            dobot_coords["r"],
-            0,
-            0,
-        )
+        dobot.moveToPoint([dobot_coords["x"], dobot_coords["y"], dobot_coords["z"], dobot_coords["r"]])
         time.sleep(2)
     else:
         x = float(calib_values['dobot_foto_pos']['x'])
         y = float(calib_values['dobot_foto_pos']['y'])
         z = float(calib_values['dobot_foto_pos']['z'])
         r = float(calib_values['dobot_foto_pos']['r'])
-        clf.MovL(x, y, z, r, 0, 0)
+        dobot.moveToPoint([x, y, z, r])
         time.sleep(2)
 
-    cld.DisableRobot()
+    dobot.dashboard.DisableRobot()
     return jsonify({"message": "Moved to start photo position"})
 
 
@@ -256,15 +246,15 @@ def classify_objects():
 # Start the process
 @app.route("/start_process", methods=["GET"])
 def start_process():
-    cld.EnableRobot(0.500, 0.0, 0.0, 0.0)
+    dobot.dashboard.EnableRobot(0.500, 0.0, 0.0, 0.0)
 
     world_coord = control.prep_coords(
         list(obj_pixel_coord.values()), calib_values
     )
     foto_postion = calib_values["dobot_foto_pos"]
-    dobot_mode = cld.RobotMode ()
+    dobot_mode = dobot.dashboard.RobotMode()
     if (dobot_mode != 9 ):
-     control.move_to_object(world_coord, -138, -90.50, cld,clf, foto_postion)
+     control.move_to_object(world_coord, -138, -90.50, dobot, foto_postion)
     
 
 if __name__ == "__main__":
