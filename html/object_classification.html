@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container text-center" id="imageContainer">
+		</div>
+		<div class="container text-center"> 
+    <div id="image-container">
+        <img id="image" src="loading.gif" alt="Loading..." class="mx-auto" style="display: none;"> 
+    </div>
+</div>
+		<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <button class="btn btn-primary btn-icon" onclick="capture()"><i class="fas fa-record-vinyl"></i> Capture</button>
+      <button class="btn btn-success btn-icon" onclick="classify()"><i class="fas fa-filter"></i> Classify</button>
+    </div>
+  </div>
+</div>
+</body>
+
+<script>
+	 const ipAddress = '192.168.11.151';
+	 const port = 5000;
+	 
+	 var container = document.getElementById("imageContainer");
+	 var images = [];
+	 
+	 async function list_images_api() {
+        try {
+            const apiUrl = "http://" + ipAddress + ":" + port +  "/list_detail_images";
+            const requestOptions = {
+method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            const response = await fetch(apiUrl, requestOptions);
+            const data = await response.json();
+
+            return data;
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    }
+    
+    	     document.addEventListener("DOMContentLoaded", async function() {
+
+    });
+    
+    async function reload() {
+const data = await list_images_api()
+console.log("Data: ");
+console.log(data);
+console.log("Images: ");
+console.log(images);
+if(data.toString() != images.toString()){
+	images = data;
+	show_images();
+}
+}
+
+setInterval(reload, 2000);
+
+    async function show_images() {
+        try {
+					container.innerHTML = '';  
+             images = await list_images_api();
+             filteredImages = filterUnclassified(images) 
+            
+            for (var i = 0; i < filteredImages.length; i++) {
+    if (i % 4 === 0) {
+      var row = document.createElement("div");
+      row.className = "row";
+      container.appendChild(row);
+    }
+
+    var column = document.createElement("div");
+    column.className = "col-md-3 mb-3";
+
+    var img = document.createElement("img");
+    img.src = "http://" + ipAddress + ":" + port + "/get_image/detail/" + filteredImages[i];
+    img.className = "img-fluid";
+    img.alt = filteredImages[i];
+
+    var textAbove = document.createElement("div");
+    if(filteredImages[i].includes("unclassified")){
+			textAbove.style.color = "red";
+			    textAbove.textContent = "Unclassified";
+		} else {
+			textAbove.style.color = "green";
+			textAbove.textContent = "Classified";
+		}
+		 textAbove.className = "text-above";
+		 textAbove.style.fontWeight = "bold";
+
+
+    var textBelow = document.createElement("div");
+    const splitted = filteredImages[i].split("_");
+    if(splitted.length > 2) {
+			    textBelow.textContent = splitted[0];
+		}
+		
+		textBelow.style.fontWeight = "bold";
+    textBelow.className = "text-below";
+
+    column.appendChild(textAbove);
+    column.appendChild(img);
+    column.appendChild(textBelow);
+
+    row.appendChild(column);
+  }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    
+     function capture() {
+			console.log(filterUnclassified(images));
+			
+		}
+    
+            async function classify() {
+							document.getElementById('image').style.display = 'block';
+              try {
+            const apiUrl = "http://" + ipAddress + ":" + port +  "/classify_objects";
+            const requestOptions = {
+method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            const response = await fetch(apiUrl, requestOptions);
+            const data = await response.json();
+						document.getElementById('image').style.display = 'none';
+            return data;
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    }
+    
+    function filterUnclassified(array) {
+     const filteredArray = [];
+
+    array.forEach(image => {
+			        if (image.includes("_classified")) {
+            filteredArray.push(image);
+        } 
+    });
+
+    array.forEach(image => {
+			  let exists = false;
+        if (image.includes("_unclassified")) {
+					   filteredArray.forEach(classifiedImage => {
+		
+        if (classifiedImage.split("_")[1] == image.split("_")[0]) {
+						exists = true;
+            return;
+        } 
+    });
+    if(!exists) {
+			filteredArray.push(image);
+		}
+            
+        }
+    });
+
+    return filteredArray;
+}
+        
+</script>
+
+</html>

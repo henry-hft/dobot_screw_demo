@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobot Setting</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<div class="container mt-5">
+    <h2>Robot Arm Setting</h2>
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="intervalInput">Time sleep(s)</label>
+                <input type="number" class="form-control form-control-sm" id="intervalInput" min="0.1" max="10" step="0.1" value="1.0">
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="movementType">Type of movement</label>
+                <select class="form-control" id="movementType">
+                        <option value="pointToPoint">Point to Point</option>
+                        <option value="linear">Linear</option>
+                    </select>
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label for="speedRange">speed:</label>
+                <output class="range-value">1</output>
+                <input type="range" class="form-control-range" id="speedRange" min="1" max="100" step="1">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="heightDownInput">Height-Down</label>
+                <input type="number" class="form-control" id="heightDownInput" min="0" max="200" step="0.1">
+            </div>
+
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="heightTopInput">Height-Top</label>
+                <input type="number" class="form-control" id="heightTopInput" min="0" max="200" step="0.1">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7"></div>
+        <div class="col-lg-5">
+            <button type="submit" class="btn btn-primary custom-mt-button" id="dobotSettingButton" onclick="send_dobot_para(event)">Save Settings</button>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    const speedRange = document.getElementById('speedRange');
+    const rangeValue = document.querySelector('.range-value');
+
+    speedRange.addEventListener('input', () => {
+        rangeValue.textContent = speedRange.value;
+    });
+
+    function send_dobot_para(event) {
+        event.preventDefault();
+        var intervalInput = document.getElementById("intervalInput");
+        var movementType = document.getElementById("movementType");
+        var speedRange = document.getElementById("speedRange");
+        var heightDownInput = document.getElementById("heightDownInput");
+        var heightTopInput = document.getElementById("heightTopInput");
+
+        var data = {
+            interval: intervalInput.value,
+            movementType: movementType.value,
+            speed: speedRange.value,
+            heightDown: heightDownInput.value,
+            heightTop: heightTopInput.value
+        };
+        sendToServer(data);
+    }
+
+    function sendToServer(data) {
+
+        const url = 'http://localhost:5000/send_dobot_para'
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+
+        .then(response => response.json())
+            .then(data => {
+                console.log('Antwort vom Server:', data);
+            })
+            .catch(error => {
+                console.error('Fehler aufgetreten:', error);
+            });
+
+    }
+</script>

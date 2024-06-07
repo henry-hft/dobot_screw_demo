@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webinterface</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container-xxl">
+        <div class="col-lg-12 leiste">
+            <div class="row">
+                <div class="col-lg-9">
+                    <!-- Error Modal -->
+                    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <!-- Modal Title -->
+                                    <h5 class="modal-title" id="errorModalLabel">Error Message</h5>
+                                    <!-- Close Button -->
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="errorModalBody">
+                                    <!-- Error message content goes here -->
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- Close Button -->
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <!-- Clear Error Button -->
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="clear_error()">Clear Error</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-9">
+                    <!-- Page Header -->
+                    <h2 class="mt-1" id="doboHeader">Dobot</h2>
+                </div>
+                <div class="col-lg-1 mt-2">
+                    <!-- Connect TCP Button -->
+                    <button class="btn btn-danger" onclick="reset_dobot()">Rest</button>
+                </div>
+                <div class="col-lg-1 mt-2">
+                    <!-- Log Button -->
+                    <span class="clickable-text" onclick="get_error_ids()" data-bs-toggle="modal" data-bs-target="#errorModal">
+                        <i class="fas fa-exclamation-triangle fa-2x icon"></i> Log
+                    </span>
+                </div>
+                <div class="col-lg-1 mt-3 custom-control custom-switch">
+                    <!-- Dobot Toggle Switch -->
+                    <input type="checkbox" class="custom-control-input" id="switchToggle" onchange="toggle_dobot()">
+                    <label class="custom-control-label" for="switchToggle">
+                        <span id="switchLabel">Dobot</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2">
+                <nav>
+                    <div class="position-sticky sidebar">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <!-- Home Button -->
+                                <button class="nav-link btn btn-link" id="homeButton" onclick="show_web_page('webpageFrame', 'home.html')">
+                                    <i class="fas fa-cog"></i> Home
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Dobot Calibration Button -->
+                                <button class="nav-link btn btn-link" id="calibrationButton" onclick="show_web_page('webpageFrame', 'calibration.html')">
+                                    <i class="fas fa-cog"></i> Dobot Calibration
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Object Detection Button -->
+                                <button class="nav-link btn btn-link" onclick="show_web_page('webpageFrame', 'object_detection.html')">
+                                    <i class="fas fa-search"></i> Object Detection
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Live Streaming Button -->
+                                <button class="nav-link btn btn-link" onclick="show_web_page('webpageFrame', 'live_streaming.html')">
+                                    <i class="fas fa-film"></i> Live Streaming
+                                </button>
+                            </li>
+                            <hr>
+                            <li class="nav-item">
+                                <!-- Camera Setting Button -->
+                                <button class="nav-link btn btn-link" id="cameraSettingButton" onclick="show_web_page('webpageFrame', 'camera_setting.html')">
+                                    <i class="fas fa-camera"></i> Camera Setting
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Dobot Setting Button -->
+                                <button class="nav-link btn btn-link" id="dobotSettingButton" onclick="show_web_page('webpageFrame', 'dobot_setting.html')">
+                                    <i class="fas fa-wrench"></i> Dobot Setting
+                                </button>
+                            </li>
+                            <hr>
+                            <li class="nav-item">
+                                <!-- Detail Recording Button -->
+                                <button class="nav-link btn btn-link">
+                                    <i class="fas fa-record-vinyl"></i> Detail Capture
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Sorting Positions Button -->
+                                <button class="nav-link btn btn-link" onclick="show_web_page('webpageFrame', 'sorting.html')">
+                                    <i class="fas fa-sort"></i> Sorting Positions
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-10">
+                <!-- Webpage Frame (iframe) -->
+                <iframe id="webpageFrame" width="100%" height="100%" src="home.html"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-bar px-2" id="coordBox">
+        <!-- Coordinates Display -->
+        <p>
+            X: <span id="xCoordinate">326.25</span> | Y: <span id="yCoordinate">-13.15</span> | Z: <span id="zCoordinate">170.15</span> | R: <span id="rCoordinate">35.00</span>
+        </p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        var dobot_postion = [0, 0, 0, 0]
+
+        // load a webpage into an iframe
+        function show_web_page(webFrame, webSite) {
+            var iframe = document.getElementById(webFrame);
+            var webpageURL = "./" + webSite
+            iframe.src = webpageURL;
+
+        }
+
+        let ipAddress = '192.168.11.151';
+
+        async function fetch_api(path, method = 'GET', requestBody = {}) {
+            try {
+                const apiUrl = `http://${ipAddress}:${path}`;
+                const requestOptions = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                if (method !== 'GET') {
+                    requestOptions.body = JSON.stringify(requestBody);
+                }
+
+                const response = await fetch(apiUrl, requestOptions);
+                const data = await response.json();
+
+                return data;
+            } catch (error) {
+                console.error('Error:', error);
+                throw error;
+            }
+        }
+
+        const switchLabel = document.getElementById('switchLabel');
+
+        async function update_dobot_status() {
+            try {
+                const data = await fetch_api('5000/get_dobot_mode', 'GET');
+                const switchToggle = document.getElementById('switchToggle');
+                const switchLabel = document.getElementById('switchLabel');
+
+                switchToggle.checked = data.mode === 5;
+                switchLabel.textContent = data.mode === 5 ? 'On' : 'Off';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function toggle_dobot() {
+            try {
+                const apiUrl = switchToggle.checked ? '5000/enable' : '5000/disable';
+                await fetch_api(apiUrl, 'GET');
+                // Process the response from the Raspberry Pi here if needed
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
+            switchLabel.textContent = switchToggle.checked ? 'On' : 'Off';
+        }
+
+        async function get_dobot_position() {
+            try {
+                const data = await fetch_api('5000/get_dobot_position');
+                const dobotPosition = data.position;
+                const xCoordinate = parseFloat(dobotPosition[0]).toFixed(2);
+                const yCoordinate = parseFloat(dobotPosition[1]).toFixed(2);
+                const zCoordinate = parseFloat(dobotPosition[2]).toFixed(2);
+                const rCoordinate = parseFloat(dobotPosition[3]).toFixed(2);
+
+                // Update DOM elements with the calculated coordinates
+                document.getElementById('xCoordinate').textContent = xCoordinate;
+                document.getElementById('yCoordinate').textContent = yCoordinate;
+                document.getElementById('zCoordinate').textContent = zCoordinate;
+                document.getElementById('rCoordinate').textContent = rCoordinate;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // const intervalId = setInterval(getDobotPosition, 500);
+        async function clear_error() {
+            try {
+                await fetch_api('5000/clear_error');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function reset_dobot() {
+            try {
+                await fetch_api('5000/reset_dobot');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function get_error_ids() {
+            try {
+                const data = await fetch_api('5000/getErrorId', 'GET');
+                const errorModalBody = document.getElementById('errorModalBody');
+                const errorModalLabel = document.getElementById('errorModalLabel');
+
+                errorModalBody.innerText = '';
+
+                if (data.errorIds !== null) {
+                    let i = 1;
+                    if (data.errorIds.length === 0) {
+                        errorModalBody.innerText = 'No errors' + '\n';
+                    } else {
+                        data.errorIds.forEach(async(errorId) => {
+                            const errorText = await get_error_text(errorId);
+                            errorModalLabel.innerText = errorText.title;
+                            errorModalBody.innerText += i + ') ' + errorText.message + ' Error-ID: ' + errorId + '\n';
+                            i++;
+                        });
+                    }
+                } else {
+                    errorModalBody.innerText = 'No errors' + '\n';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        let errorMessages = {};
+
+        async function load_error_messages() {
+            try {
+                const response = await fetch('error_messages.json');
+                const data = await response.json();
+                Object.assign(errorMessages, data);
+            } catch (error) {
+                console.error('Fehler beim Laden der Fehlermeldungen:', error);
+            }
+        }
+
+        load_error_messages();
+
+        function get_error_text(errorId) {
+            return errorMessages[errorId] || {
+                title: 'Unknown Error',
+                message: 'An unknown error has occurred.'
+            };
+        }
+
+        async function coord_on_hover() {
+            await get_dobot_position()
+        }
+
+        const coordBoxDiv = document.getElementById("coordBox");
+        coordBoxDiv.addEventListener("mouseenter", coord_on_hover);
+    </script>
+
+</body>
+
+</html>

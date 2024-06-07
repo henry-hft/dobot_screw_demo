@@ -1,0 +1,11 @@
+[Unit]
+Description=Dobot Server Service
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/dobot/dobot_server.py
+WorkingDirectory=/home/pi/dobot
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

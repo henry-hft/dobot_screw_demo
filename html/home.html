@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container mt-1">
+        <div class="row">
+            <div class="col-lg-10">
+                <div class="border mt-3 streaming-container">
+                    <iframe src="http://192.168.11.151:8000/" frameborder="0" height="100%"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-4">
+                <button class="nav-link btn btn-link" onclick="move_to_start_foto_pos()">
+                    <i class="fas fa-arrow-up  icon"></i> Photo Position
+                </button>
+            </div>
+
+            <div class="col-4">
+                <button class="btn btn-link" onclick="save_current_frame()">
+                    <i class="fas fa-camera icon"></i>
+                    Capture
+                </button>
+            </div>
+
+            <div class="col-4">
+                <button class="btn btn-link" onclick="start_process()">
+                    <i class="fas fa-play icon"></i>
+                    Start Process
+                </button>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-4">
+                <button class="nav-link btn btn-link" onclick="restart_dobot_server()">
+                    <i class="fas fa-sync-alt  icon"></i>  restart Server 
+                </button>
+            </div>
+            <div class="col-4">
+                <button class="nav-link btn btn-link" onclick="open_gripper()">
+                    <i class="fas fa-robot icon"></i> open Gripper 
+                </button>
+            </div>
+
+            <div class="col-4">
+                <button class="nav-link btn btn-link" onclick="close_gripper()">
+                    <i class="fas fa-times icon"></i>close Gripper 
+
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+    let ip_address = '192.168.11.151';
+
+    async function fetch_api(path, method = 'GET', requestBody = {}) {
+        const url = `http://${ip_address}:${path}`;
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: method === 'GET' ? undefined : JSON.stringify(requestBody)
+            });
+
+            if (method === 'GET') {
+                return await response.json();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function save_current_frame() {
+        const response = await fetch_api('8000/save_current_frame', 'GET');
+    }
+
+    async function find_contours() {
+        const data = await fetch_api('5000/find_contours');
+    }
+
+    async function start_process() {
+        await find_contours();
+        const data = await fetch_api('5000/start_process');
+    }
+
+    async function move_to_start_foto_pos() {
+        await fetch_api('5000/move_to_start_foto_pos', 'POST', {});
+    }
+
+    async function stop_dobot_server() {
+        await fetch_api('8000/restart_server', 'POST');
+    }
+
+    async function restart_dobot_server() {
+        await fetch_api('5000/disable', 'GET');
+        await fetch_api('8000/restart_dobot_server', 'GET');
+    }
+
+    async function open_gripper() {
+        await fetch_api('5000/open_gripper', 'GET');
+    }
+
+    async function close_gripper() {
+        await fetch_api('5000/close_gripper', 'GET');
+    }
+</script>
+
+</html>
