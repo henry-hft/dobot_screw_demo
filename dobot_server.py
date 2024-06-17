@@ -33,6 +33,7 @@ def set_calibration_values():
     return jsonify({"message": "Calibration values set."})
 
 def initialize_dobot(dobot_ip="192.168.1.6", speed=80):
+    print("initialize_dobot")
     global dobot
     try:
         dobot = dobot_handler(dobot_ip)
@@ -43,6 +44,7 @@ def initialize_dobot(dobot_ip="192.168.1.6", speed=80):
 
 # Initialize Dobot before the first request
 def setup_dobot():
+    print("setup_dobot")
     success, message = initialize_dobot()
     if success:
         dobot.start()
