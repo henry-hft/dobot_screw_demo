@@ -258,6 +258,8 @@ def start_process():
 
 if __name__ == "__main__":
     #app.run(host="192.168.11.151", port=5000)
+    print("Restart Ethernet Connection")
+    os.system("/home/pi/bin/eth0_restart")
     setup_dobot()
     setup_calibration()
     app.run(host='0.0.0.0', port=5000)
