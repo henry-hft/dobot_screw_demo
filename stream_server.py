@@ -1,4 +1,4 @@
-from streamer.Streamer import Streamer
+from camera.Streamer import Streamer
 
 if __name__ == "__main__":
     stream = Streamer()
