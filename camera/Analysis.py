@@ -1,4 +1,4 @@
-from src.Configs import Configs
+from camera.Configs import Configs
 import cv2
 import numpy as np
 

@@ -1,5 +1,5 @@
-from src.Configs import Configs
-from src.Analysis import Analysis
+from camera.Configs import Configs
+from camera.Analysis import Analysis
 import threading
 import cv2
 from flask import Flask, request, jsonify, Response, send_file
