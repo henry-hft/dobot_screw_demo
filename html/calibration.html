@@ -97,7 +97,7 @@
 
                 <!-- Container for the Streaming iframe -->
                 <div class="border mt-3 streaming-container">
-                    <iframe id="stream-iframe" src="http://192.168.11.151:8000/" frameborder="0"></iframe>
+                    <iframe id="stream-iframe" src="http://127.0.0.1:8000/" frameborder="0"></iframe>
                 </div>
             </div>
 
@@ -255,7 +255,7 @@
         $('#dobotNextButton').addClass('custom-xxl-mt-button');
     });
 
-    let ipAddress = '192.168.11.151';
+    let ipAddress = '127.0.0.1';
 
     async function fetch_api(path, method = 'GET', requestBody = {}) {
         try {
