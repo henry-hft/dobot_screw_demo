@@ -1,6 +1,6 @@
 class Configs():
 
-    RaspberryIP = "192.168.11.151"
+    RaspberryIP = "127.0.0.1"
     port = 8000
     frameRate = 5
     videoResolution = (1920, 1080)       # Fast, Aspect=4:3

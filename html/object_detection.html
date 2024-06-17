@@ -39,7 +39,7 @@
 </body>
 
 <script>
-    let ipAddress = '192.168.11.151';
+    let ipAddress = '127.0.0.1';
     const imageElement = document.getElementById('image');
 
     const imageUrls = ['gray_im.jpg', 'gammaCorrection.jpg', 'thresh.jpg', 'morphOperation.jpg', 'autoCanny.jpg', 'contours.jpg'];
@@ -68,11 +68,11 @@
     }
 
     async function get_images(imageUrl, capture = false) {
-        imageElement.src = `http://192.168.11.151:5000/get_image/${imageUrl}`;
+        imageElement.src = `http://127.0.0.1:5000/get_image/${imageUrl}`;
     }
 
     document.addEventListener("DOMContentLoaded", async function() {
-        imageElement.src = imageElement.src = `http://192.168.11.151:5000/get_image/original_foto.jpg`;
+        imageElement.src = imageElement.src = `http://127.0.0.1:5000/get_image/original_foto.jpg`;
         find_contours();
     });
 
