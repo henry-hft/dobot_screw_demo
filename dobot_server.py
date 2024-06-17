@@ -97,7 +97,7 @@ def resetDobot():
 
 # Get Dobot error message
 @app.route("/get_error_message", methods=["GET"])
-def getErrorMessage():
+def getError():
     return jsonify({"errorMessage": dobot.getErrorMessage()})
 
 # Enable Dobot
