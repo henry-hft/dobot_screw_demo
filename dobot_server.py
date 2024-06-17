@@ -11,34 +11,13 @@ import classification_cnn
 import glob
 
 file_write_lock = threading.Lock()
+app = Flask(__name__)
 
 dobot = None
 obj_pixel_coord = None
 calib_values = None
 get_position_flag = True
 stop_process_flag = None
-
-app = Flask(__name__)
-
-def start_server():
-    with app.app_context():
-        setup_dobot()
-        setup_calibration()
-    return app
-
-
-# Initialize Dobot before the first request
-def setup_dobot():
-    success, message = initialize_dobot()
-    if success:
-        dobot.start()
-    else:
-        return message
-
-def setup_calibration():
-     with open("calibration_file.json") as json_file:
-        global calib_values
-        calib_values = json.load(json_file)
 
 # Function to write JSON data to a file
 def write_to_file(data, filename):
@@ -60,6 +39,21 @@ def initialize_dobot(dobot_ip="192.168.1.6", speed=80):
         return True, "Connection established"
     except Exception as error:
         return False, "Connection failed"
+
+
+# Initialize Dobot before the first request
+def setup_dobot():
+    success, message = initialize_dobot()
+    if success:
+        dobot.start()
+    else:
+        return message
+
+def setup_calibration():
+     with open("calibration_file.json") as json_file:
+        global calib_values
+        calib_values = json.load(json_file)
+ 
 
 @app.after_request
 def add_header(response):
@@ -262,5 +256,6 @@ def start_process():
 
 if __name__ == "__main__":
     #app.run(host="192.168.11.151", port=5000)
-    app = start_server()
+    setup_dobot()
+    setup_calibration()
     app.run(host='0.0.0.0', port=5000)
