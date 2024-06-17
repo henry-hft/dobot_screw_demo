@@ -9,6 +9,40 @@ import imutils
 import random
 import os
 
+def pres_crop_four_points(image_or_path, marker_coord):
+    marker_coord_array = []
+    img =cv2.imread (image_or_path)
+    
+    for marker in marker_coord:
+        inner_array = [marker["x"], marker["y"]]
+        marker_coord_array.append(inner_array)
+    
+    print(marker_coord_array)
+    rectangle = np.array(marker_coord_array, dtype=np.float32)
+    (tl, tr, br, bl) = rectangle
+
+    # Calculate the width and height of the new image
+    widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
+    widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
+    max_width = max(int(widthA), int(widthB))
+
+    heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
+    heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
+    max_height = max(int(heightA), int(heightB))
+
+    dst = np.array([
+        [0, 0],
+        [max_width - 1, 0],
+        [max_width - 1, max_height - 1],
+        [0, max_height - 1]], dtype="float32")
+
+    M = cv2.getPerspectiveTransform(rectangle, dst)
+    transformed = cv2.warpPerspective(img, M, (max_width, max_height))
+
+    #transformed_image_path = "./images/"+ 'transformed_image.jpg' 
+    #cv2.imwrite(transformed_image_path, transformed)
+    return transformed
+
 def undistort_image(image_or_path, output_path):
     if isinstance(image_or_path, str):
         img = Image.open(image_or_path)
@@ -36,7 +70,7 @@ def Grayscale(ImageSrc, Classify=False):
   gray_im = cv2.cvtColor(ImageSrc, cv2.COLOR_RGB2GRAY)
   
   if not Classify:
-			cv2.imwrite("./images/" + 'gray_im.jpg' , gray_im)
+      cv2.imwrite("./images/" + 'gray_im.jpg' , gray_im)
 			
   return(gray_im)
 
@@ -54,7 +88,7 @@ def Threshold(ImageSrc, Classify=False, MaxValue = 255, BlockSize = 255, C = 19)
   thresh = cv2.bitwise_not(thresh)
   
   if not Classify:
-			cv2.imwrite("./images/" + 'thresh.jpg' , thresh)
+      cv2.imwrite("./images/" + 'thresh.jpg' , thresh)
 			
   return(thresh)
 

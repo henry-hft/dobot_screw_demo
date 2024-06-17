@@ -6,7 +6,7 @@ import os
 
 class dobot_handler:
     def __init__(self, ip):
-        self.restartEthernet(self)
+        self.restartEthernet()
         self.ip = ip
         self.dashboardPort = 29999
         self.movePort = 30003
@@ -37,6 +37,16 @@ class dobot_handler:
     def setDO(self, port, value):
         self.dashboard.DOExecute(8, value)
         print(f"Port {port} set to {value}\n")
+        
+    def getPosition(self):
+        position = self.dashboard.GetPose() 
+        match = re.search(r'\{([^}]*)\}', position)
+
+        if match:
+            values_str = match.group(1)
+            values_array = [float(val) for val in values_str.split(',')]
+            return(values_array)
+        return [0,0,0,0]
 
     def moveToPoint(self, point_list: list):
         move = self.move.MovL(

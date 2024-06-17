@@ -5,7 +5,6 @@ import json
 import threading
 import os
 import image_processing
-import img_handle
 import control
 import classification_cnn
 import glob
@@ -140,7 +139,7 @@ def close_gripper():
 @app.route("/get_dobot_position", methods=["GET"])
 def get_dobot_position():
     try:
-        dobot_position = dobot.dashboard.GetPose()
+        dobot_position = dobot.getPosition()
         return jsonify({"position": dobot_position})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -226,7 +225,7 @@ def find_contours():
     marker_coord = calib_values["marker_coord"]
     print (marker_coord, '*************************************')
     global obj_pixel_coord
-    trans_foto = img_handle.pres_crop_four_points(
+    trans_foto = image_processing.pres_crop_four_points(
         "./images/original_foto.jpg", marker_coord
     )
     
@@ -258,8 +257,6 @@ def start_process():
 
 if __name__ == "__main__":
     #app.run(host="192.168.11.151", port=5000)
-    print("Restart Ethernet Connection")
-    os.system("/home/pi/bin/eth0_restart")
     setup_dobot()
     setup_calibration()
     app.run(host='0.0.0.0', port=5000)

@@ -1,4 +1,4 @@
-from streamer.Configs import Configs
+from src.Configs import Configs
 import cv2
 import numpy as np
 
@@ -58,5 +58,5 @@ class Analysis(Configs):
         pass
     
     def main_analysis(self, image):
-        image, ref_points = process_frame (image)
+        image, ref_points = process_frame(image)
         return image, ref_points
