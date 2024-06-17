@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-lg-1 mt-2">
                     <!-- Log Button -->
-                    <span class="clickable-text" onclick="get_error_ids()" data-bs-toggle="modal" data-bs-target="#errorModal">
+                    <span class="clickable-text" onclick="get_error_message()" data-bs-toggle="modal" data-bs-target="#errorModal">
                         <i class="fas fa-exclamation-triangle fa-2x icon"></i> Log
                     </span>
                 </div>
@@ -245,14 +245,15 @@
             }
         }
 
-        async function get_error_ids() {
+        async function get_error_message() {
             try {
-                const data = await fetch_api('5000/getErrorId', 'GET');
+                const data = await fetch_api('5000/get_error_message', 'GET');
                 const errorModalBody = document.getElementById('errorModalBody');
                 const errorModalLabel = document.getElementById('errorModalLabel');
 
-                errorModalBody.innerText = '';
+                errorModalBody.innerText = data.errorMessage;
 
+                /*
                 if (data.errorIds !== null) {
                     let i = 1;
                     if (data.errorIds.length === 0) {
@@ -268,11 +269,13 @@
                 } else {
                     errorModalBody.innerText = 'No errors' + '\n';
                 }
+                */
             } catch (error) {
                 console.error('Error:', error);
             }
         }
 
+        /*
         let errorMessages = {};
 
         async function load_error_messages() {
@@ -293,6 +296,7 @@
                 message: 'An unknown error has occurred.'
             };
         }
+        */
 
         async function coord_on_hover() {
             await get_dobot_position()

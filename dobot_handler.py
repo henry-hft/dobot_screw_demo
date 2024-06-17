@@ -1,4 +1,4 @@
-from dobot_api import DobotApiDashboard, DobotApi, DobotApiMove, MyType
+from dobot_api import DobotApiDashboard, DobotApi, DobotApiMove, MyType, alarmAlarmJsonFile
 from time import sleep
 import re
 import sys
@@ -54,6 +54,20 @@ class dobot_handler:
         print("MovL ", move)
         commandArrID = self.parseResultId(move)
         return commandArrID
+    
+    def getErrorMessage(self):
+        dataController, dataServo = alarmAlarmJsonFile()
+        geterrorID = self.parseResultId(self.dashboardmove.GetErrorID())
+        if geterrorID[0] == 0:
+            for i in range(1, len(geterrorID)):
+                for item in dataController:
+                    if geterrorID[i] == item["id"]:
+                        return item["en"]["description"]
+
+                for item in dataServo:
+                    if geterrorID[i] == item["id"]:
+                        return item["en"]["description"]
+
         
     def parseResultId(self, valueRecv):
         if valueRecv.find("Not Tcp") != -1: 

@@ -26,7 +26,7 @@ def write_to_file(data, filename):
 
 # Set calibration values
 def set_calibration_values():
-    with open("calibration_file.json") as json_file:
+    with open("files/calibration_file.json") as json_file:
         global calib_values
         calib_values = json.load(json_file)
     return jsonify({"message": "Calibration values set."})
@@ -51,7 +51,7 @@ def setup_dobot():
         return message
 
 def setup_calibration():
-     with open("calibration_file.json") as json_file:
+     with open("files/calibration_file.json") as json_file:
         global calib_values
         calib_values = json.load(json_file)
  
@@ -95,11 +95,10 @@ def resetDobot():
     return jsonify({"message": "rest dobot"})
 
 
-# Get Dobot error ID
-@app.route("/get_error_id", methods=["GET"])
-def getErrorId():
-    return jsonify({"errorIds": dobot.dashboard.GetErrorID()})
-
+# Get Dobot error message
+@app.route("/get_error_message", methods=["GET"])
+def getErrorMessage():
+    return jsonify({"errorMessage": dobot.getErrorMessage()})
 
 # Enable Dobot
 @app.route("/enable", methods=["GET"])
@@ -169,7 +168,7 @@ def move_to_start_foto_pos():
 @app.route("/save_calibration_file", methods=["POST"])
 def save_calibration_file():
     data = request.get_json()
-    threading.Thread(target=write_to_file, args=(data, "calibration_file.json")).start()
+    threading.Thread(target=write_to_file, args=(data, "files/calibration_file.json")).start()
     response_data = {"message": "Received JSON object and started processing."}
     time.sleep(2)
     set_calibration_values()
