@@ -1,8 +1,8 @@
 from dobot_api import DobotApiDashboard, DobotApi, DobotApiMove, MyType, alarmAlarmJsonFile
 from time import sleep
+import subprocess
 import re
 import sys
-import os
 
 class dobot_handler:
     def __init__(self, ip):
@@ -80,6 +80,8 @@ class dobot_handler:
         return recvData
     
     def restartEthernet(self):
-        print("Restart Ethernet Connection")
-        os.system("/home/pi/bin/eth0_restart")
+        print("Restarting Ethernet Interface...")
+        subprocess.run(["sudo", "ifconfig", "eth0", "down"])
+        sleep(1.0)
+        subprocess.run(["sudo", "ifconfig", "eth0", "down"])
         sleep(1.0)
