@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Ethernet configuration to connect to the dobot
+ETH_INTERFACE="eth0"
+DOBOT_IP="192.168.1.6"
+PI_IP="192.168.1.5"
+
+echo "Configuring Ethernet for the dobot connection..."
+sudo ip link set $ETH_INTERFACE up
+sudo ip addr add $PI_IP/24 dev $ETH_INTERFACE
+
+# Add route to ensure Ethernet is used only for the local connection to the dobot
+sudo ip route add $ROBOT_IP dev $ETH_INTERFACE
+
 # Update package list
 sudo apt-get update
 
