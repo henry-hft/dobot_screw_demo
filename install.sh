@@ -10,7 +10,7 @@ sudo ip link set $ETH_INTERFACE up
 sudo ip addr add $PI_IP/24 dev $ETH_INTERFACE
 
 # Add route to ensure Ethernet is used only for the local connection to the dobot
-sudo ip route add $ROBOT_IP dev $ETH_INTERFACE
+sudo ip route add $DOBOT_IP dev $ETH_INTERFACE
 
 # Update package list
 sudo apt-get update
