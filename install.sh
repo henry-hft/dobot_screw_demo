@@ -15,6 +15,8 @@ sudo ip route add $DOBOT_IP dev $ETH_INTERFACE
 # Update package list
 sudo apt-get update
 
+python3 -m venv dobot
+
 # Install required packages
 sudo apt-get install -y python3-numpy
 sudo apt-get install -y libblas-dev
@@ -26,6 +28,11 @@ sudo apt-get install -y python3-setuptools
 sudo apt-get install -y python3-scipy
 sudo apt-get install -y python3-h5py
 sudo apt-get install -y python3-opencv
+sudo apt-get install -y python3-virtualenv
+
+# Create virtual environment
+python3 -m venv dobot
+source dobot/bin/activate
 
 # Install Python packages via pip
 pip install --upgrade scipy
@@ -35,3 +42,4 @@ pip install keras
 pip install opencv-python
 pip install flask
 pip install matplotlib
+pip install imutils
