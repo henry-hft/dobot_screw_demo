@@ -20,7 +20,7 @@ echo "Installing Miniforge..."
 sudo mkdir -p ~/miniforge3
 # Download Miniforge for Raspberry Pi 64-bit (aarch64)
 sudo wget https://github.com/conda-forge/miniforge/releases/download/24.9.2-0/Mambaforge-24.9.2-0-Linux-aarch64.sh -O ~/miniforge3/miniforge.sh
-sudo bash ~/miniforge3/miniforge.sh -b -p ~/miniforge3
+sudo bash ~/miniforge3/miniforge.sh -b -u -p ~/miniforge3
 sudo rm ~/miniforge3/miniforge.sh
 
 # Add Miniforge to PATH immediately
