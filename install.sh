@@ -15,24 +15,31 @@ sudo ip route add $DOBOT_IP dev $ETH_INTERFACE
 sudo apt-get update
 sudo apt-get install -y libblas-dev liblapack-dev libatlas-base-dev gfortran python3-dev python3-setuptools python3-opencv python3-picamera2 python3-matplotlib
 
-# Install Miniconda
-echo "Installing Miniconda..."
-sudo mkdir -p ~/miniconda3
-sudo wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-armv7l.sh -O ~/miniconda3/miniconda.sh
-sudo bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-sudo rm ~/miniconda3/miniconda.sh
-sudo source ~/miniconda3/bin/activate
-echo "Miniconda installation complete. Sourcing ~/.bashrc..."
-source ~/.bashrc
+# Install Miniforge
+echo "Installing Miniforge..."
+mkdir -p ~/miniforge3
+# Download Miniforge for Raspberry Pi 64-bit (aarch64)
+wget https://github.com/conda-forge/miniforge/releases/download/4.13.0-5/Miniforge3-4.13.0-5-Linux-aarch64.sh -O ~/miniforge3/miniforge.sh
+    
+bash ~/miniforge3/miniforge.sh -b -p ~/miniforge3
+rm ~/miniforge3/miniforge.sh
+
+# Add Miniforge to PATH immediately
+export PATH=~/miniforge3/bin:$PATH
+    
+# Initialize Conda
+source ~/miniforge3/bin/activate
 conda init --all
+echo "Miniforge installation complete. Sourcing ~/.bashrc..."
+source ~/.bashrc
 
 # Create a new conda environment
 ENV_NAME="dobot_env"
-echo "Creating Miniconda environment $ENV_NAME..."
+echo "Creating Miniforge environment $ENV_NAME..."
 conda create -n $ENV_NAME python=3.9 -y
 
 # Activate the conda environment
-echo "Activating Miniconda environment $ENV_NAME..."
+echo "Activating Miniforge environment $ENV_NAME..."
 conda activate $ENV_NAME
 
 # Install Python packages
