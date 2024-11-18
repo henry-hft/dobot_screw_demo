@@ -17,20 +17,21 @@ sudo apt-get install -y libblas-dev liblapack-dev libatlas-base-dev gfortran pyt
 
 # Install Miniforge
 echo "Installing Miniforge..."
-sudo mkdir -p ~/miniforge3
+mkdir -p /home/pi/miniforge3
 # Download Miniforge for Raspberry Pi 64-bit (aarch64)
-sudo wget https://github.com/conda-forge/miniforge/releases/download/24.9.2-0/Mambaforge-24.9.2-0-Linux-aarch64.sh -O ~/miniforge3/miniforge.sh
-sudo bash ~/miniforge3/miniforge.sh -b -u -p ~/miniforge3
-sudo rm ~/miniforge3/miniforge.sh
+wget https://github.com/conda-forge/miniforge/releases/download/4.13.0-5/Miniforge3-4.13.0-5-Linux-aarch64.sh -O /home/pi/miniforge3/miniforge.sh
+    
+bash /home/pi/miniforge3/miniforge.sh -b -u -p /home/pi/miniforge3
+rm /home/pi/miniforge3/miniforge.sh
 
 # Add Miniforge to PATH immediately
-export PATH=~/miniforge3/bin:$PATH
+export PATH=/home/pi/miniforge3/bin:$PATH
     
 # Initialize Conda
-source ~/miniforge3/bin/activate
+source /home/pi/miniforge3/bin/activate
 conda init --all
-echo "Miniforge installation complete. Sourcing ~/.bashrc..."
-source ~/.bashrc
+echo "Miniforge installation complete. Sourcing /home/pi/.bashrc..."
+source /home/pi/.bashrc
 
 # Create a new conda environment
 ENV_NAME="dobot_env"
