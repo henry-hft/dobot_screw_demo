@@ -17,12 +17,11 @@ sudo apt-get install -y libblas-dev liblapack-dev libatlas-base-dev gfortran pyt
 
 # Install Miniforge
 echo "Installing Miniforge..."
-mkdir -p ~/miniforge3
+sudo mkdir -p ~/miniforge3
 # Download Miniforge for Raspberry Pi 64-bit (aarch64)
-wget https://github.com/conda-forge/miniforge/releases/download/4.13.0-5/Miniforge3-4.13.0-5-Linux-aarch64.sh -O ~/miniforge3/miniforge.sh
-    
-bash ~/miniforge3/miniforge.sh -b -p ~/miniforge3
-rm ~/miniforge3/miniforge.sh
+sudo wget https://github.com/conda-forge/miniforge/releases/download/24.9.2-0/Mambaforge-24.9.2-0-Linux-aarch64.sh -O ~/miniforge3/miniforge.sh
+sudo bash ~/miniforge3/miniforge.sh -b -p ~/miniforge3
+sudo rm ~/miniforge3/miniforge.sh
 
 # Add Miniforge to PATH immediately
 export PATH=~/miniforge3/bin:$PATH
