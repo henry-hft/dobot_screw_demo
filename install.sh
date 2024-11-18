@@ -1,59 +1,46 @@
 #!/bin/bash
 
-# Ethernet configuration for the Dobot connection
+# Ethernet configuration to connect to the dobot
 ETH_INTERFACE="eth0"
 DOBOT_IP="192.168.1.6"
 PI_IP="192.168.1.5"
 
-# Start of the main script
-echo "Configuring Ethernet for the Dobot connection..."
+echo "Configuring Ethernet for the dobot connection..."
 sudo ip link set $ETH_INTERFACE up
 sudo ip addr add $PI_IP/24 dev $ETH_INTERFACE
+
+# Add route to ensure Ethernet is used only for the local connection to the dobot
 sudo ip route add $DOBOT_IP dev $ETH_INTERFACE
 
-# Update package list and install required system packages
+# Update package list
 sudo apt-get update
-sudo apt-get install -y libblas-dev liblapack-dev libatlas-base-dev gfortran python3-dev python3-setuptools python3-opencv python3-picamera2 python3-matplotlib
 
-# Install Miniforge
-echo "Installing Miniforge..."
-sudo mkdir -p /home/pi/miniforge3
-# Download Miniforge for Raspberry Pi 64-bit (aarch64)
-sudo wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -O /home/pi/miniforge3/miniforge.sh
-    
-sudo bash /home/pi/miniforge3/miniforge.sh -b -u -p /home/pi/miniforge3
-sudo rm /home/pi/miniforge3/miniforge.sh
+# Install required packages
+sudo apt-get install -y python3-numpy
+sudo apt-get install -y libblas-dev
+sudo apt-get install -y libcap-dev
+sudo apt-get install -y liblapack-dev
+sudo apt-get install -y python3-dev
+sudo apt-get install -y libatlas-base-dev
+sudo apt-get install -y gfortran
+sudo apt-get install -y python3-setuptools
+sudo apt-get install -y python3-scipy
+sudo apt-get install -y python3-h5py
+sudo apt-get install -y python3-opencv
+sudo apt-get install -y python3-virtualenv
+sudo apt-get install -y python3-picamera2
+sudo apt-get install -y python3-libcamera
+sudo apt-get install -y python3-matplotlib
 
-# Add Miniforge to PATH immediately
-export PATH=/home/pi/miniforge3/bin:$PATH
+# Create virtual environment
+python3 -m venv dobot
+source dobot/bin/activate
 
-# Initialize Conda
-source /home/pi/miniforge3/bin/activate
-conda init --all
-echo "Miniforge installation complete. Sourcing /home/pi/.bashrc..."
-source /home/pi/.bashrc
-
-# Create a new conda environment
-ENV_NAME="dobot_env"
-echo "Creating Miniforge environment $ENV_NAME..."
-conda create -n $ENV_NAME python=3.9 -y
-
-# Activate the conda environment
-echo "Activating Miniforge environment $ENV_NAME..."
-conda activate $ENV_NAME
-
-# Install Python packages
-echo "Installing Python packages..."
-conda install -y numpy
-conda install -y scipy
-conda install -y h5py
-conda install -y matplotlib
-conda install -y flask
-conda install -y tensorflow
-conda install -y keras
-conda install -y cython
-conda install -y opencv
-conda install -y conda-forge::imutils
-
-echo "Setup complete. The environment $ENV_NAME is active."
-echo "To activate the environment later, use: conda activate $ENV_NAME"
+# Install Python packages via pip
+python -m pip install --upgrade scipy
+python -m pip install --upgrade cython
+python -m pip install imutils
+python -m pip install tensorflow
+python -m pip install keras
+python -m pip install opencv-python
+python -m pip install flask
