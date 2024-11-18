@@ -28,6 +28,7 @@ sudo apt-get install -y python3-h5py
 sudo apt-get install -y python3-opencv
 sudo apt-get install -y python3-virtualenv
 sudo apt-get install -y python3-picamera2
+sudo apt-get install -y python3-matplotlib
 
 # Create virtual environment
 python3 -m venv dobot
@@ -40,5 +41,4 @@ pip install tensorflow
 pip install keras
 pip install opencv-python
 pip install flask
-pip install matplotlib
 pip install imutils
