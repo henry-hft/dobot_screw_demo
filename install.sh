@@ -22,8 +22,9 @@ sudo wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh 
 sudo bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 sudo rm ~/miniconda3/miniconda.sh
 sudo source ~/miniconda3/bin/activate
+echo "Miniconda installation complete. Sourcing ~/.bashrc..."
+source ~/.bashrc
 conda init --all
-echo "Miniconda installation complete. Please restart your shell or run 'source ~/.bashrc'."
 
 # Create a new conda environment
 ENV_NAME="dobot_env"
