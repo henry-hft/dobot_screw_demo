@@ -18,7 +18,7 @@ sudo apt-get install -y libblas-dev liblapack-dev libatlas-base-dev gfortran pyt
 # Install Miniconda
 echo "Installing Miniconda..."
 sudo mkdir -p ~/miniconda3
-sudo wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+sudo wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-armv7l.sh -O ~/miniconda3/miniconda.sh
 sudo bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 sudo rm ~/miniconda3/miniconda.sh
 sudo source ~/miniconda3/bin/activate
