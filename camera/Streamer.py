@@ -15,8 +15,8 @@ save_current_frame_detail = False
 frame_detail_index = 0
 current_lens_position = 2.0
 
-storage_path = "/home/pi/dobot3_2024/dobot/images/"
-storage_path_detail = "/home/pi/dobot3_2024/dobot/images/detail/"
+storage_path = "/home/pi/dobot_screw_demo/images/"
+storage_path_detail = "/home/pi/dobot_screw_demo/images/detail/"
 image_name = 'original_foto.jpg'
 
 if not os.path.exists(storage_path):
@@ -46,7 +46,7 @@ class Streamer(Configs):
             self.camera.configure(self.camera_config)
             return jsonify({"message": "Auflösung erfolgreich aktualisiert."})
         else:
-            return jsonify({"error": "Ungültiges Auflösungsformat."}) """
+            return jsonify({"error": "Invalid resolution"}) """
 
     def capture_frames(self):
         while True:
