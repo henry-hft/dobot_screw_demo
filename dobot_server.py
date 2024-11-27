@@ -26,7 +26,7 @@ def write_to_file(data, filename):
 
 # Set calibration values
 def set_calibration_values():
-    with open("files/calibration_file.json") as json_file:
+    with open("/home/pi/dobot_screw_demo/dobotserver/files/calibration_file.json") as json_file:
         global calib_values
         calib_values = json.load(json_file)
     return jsonify({"message": "Calibration values set."})
@@ -51,7 +51,7 @@ def setup_dobot():
         return message
 
 def setup_calibration():
-     with open("files/calibration_file.json") as json_file:
+     with open("/home/pi/dobot_screw_demo/dobotserver/files/calibration_file.json") as json_file:
         global calib_values
         calib_values = json.load(json_file)
  
@@ -258,4 +258,4 @@ if __name__ == "__main__":
     #app.run(host="192.168.11.151", port=5000)
     setup_dobot()
     setup_calibration()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
