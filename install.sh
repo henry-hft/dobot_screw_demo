@@ -59,3 +59,4 @@ python -m pip install wheel
 python -m pip install rpi-libcamera
 python -m pip install rpi-kms
 python -m pip install picamera2
+python -m pip install numpy==1.26.4
