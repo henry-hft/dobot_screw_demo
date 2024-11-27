@@ -83,5 +83,5 @@ class dobot_handler:
         print("Restarting Ethernet Interface...")
         subprocess.run(["sudo", "ifconfig", "eth0", "down"])
         sleep(1.0)
-        subprocess.run(["sudo", "ifconfig", "eth0", "down"])
+        subprocess.run(["sudo", "ifconfig", "eth0", "up"])
         sleep(1.0)
