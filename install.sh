@@ -47,3 +47,4 @@ python -m pip install keras
 python -m pip install opencv-python
 python -m pip install flask
 python -m pip install matplotlib
+python -m pip install picamera2
