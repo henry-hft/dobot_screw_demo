@@ -32,10 +32,18 @@ sudo apt-get install -y python3-picamera2
 sudo apt-get install -y python3-libcamera
 sudo apt-get install -y python3-matplotlib
 sudo apt-get install -y python3-virtualenv
+sudo apt-get install -y libcap-dev
+sudo apt-get install -y libatlas-base-dev 
+sudo apt-get install -y ffmpeg 
+sudo apt-get install -y libopenjp2-7
+sudo apt-get install -y libcamera-dev
+sudo apt-get install -y libkms++-dev 
+sudo apt-get install -y libfmt-dev 
+sudo apt-get install -y libdrm-dev
 
 
 # Create virtual environment
-virtualenv dobot
+virtualenv --system-site-packages dobot
 source dobot/bin/activate
 
 # Install Python packages via pip
@@ -47,4 +55,7 @@ python -m pip install keras
 python -m pip install opencv-python
 python -m pip install flask
 python -m pip install matplotlib
+python -m pip install wheel
+python -m pip install rpi-libcamera
+python -m pip install rpi-kms
 python -m pip install picamera2
