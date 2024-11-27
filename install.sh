@@ -31,9 +31,11 @@ sudo apt-get install -y python3-virtualenv
 sudo apt-get install -y python3-picamera2
 sudo apt-get install -y python3-libcamera
 sudo apt-get install -y python3-matplotlib
+sudo apt-get install -y python3-virtualenv
+
 
 # Create virtual environment
-python3 -m venv dobot
+virtualenv dobot
 source dobot/bin/activate
 
 # Install Python packages via pip
