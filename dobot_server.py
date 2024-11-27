@@ -1,12 +1,12 @@
-from dobot_handler import dobot_handler
+from dobotserver.dobot_handler import dobot_handler
 from flask import Flask, request, jsonify, Response, send_from_directory
 import time
 import json
 import threading
 import os
-import image_processing
-import control
-import classification_cnn
+import dobotserver.image_processing
+import dobotserver.control
+import dobotserver.classification_cnn
 import glob
 
 file_write_lock = threading.Lock()

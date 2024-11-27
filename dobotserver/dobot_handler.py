@@ -1,4 +1,4 @@
-from dobot_api import DobotApiDashboard, DobotApi, DobotApiMove, MyType, alarmAlarmJsonFile
+from dobotserver.dobot_api import DobotApiDashboard, DobotApi, DobotApiMove, MyType, alarmAlarmJsonFile
 from time import sleep
 import subprocess
 import re

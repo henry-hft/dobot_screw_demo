@@ -1,5 +1,5 @@
-from camera.Configs import Configs
-from camera.Analysis import Analysis
+from streamserver.Configs import Configs
+from streamserver.Analysis import Analysis
 import threading
 import cv2
 from flask import Flask, request, jsonify, Response, send_file

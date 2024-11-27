@@ -1,5 +1,5 @@
 from keras.models import load_model
-import image_processing
+import dobotserver.image_processing
 import cv2
 import numpy as np
 import os
@@ -7,9 +7,6 @@ import re
 
 model = None
 classes = ["Schraube 1", "Schraube 2", "Schraube 3"]
-
-import os
-import re
 
 def extract_index_from_filename(filename):
     match = re.match(r'^(\d+)_unclassified\.jpg$', filename)

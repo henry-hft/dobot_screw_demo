@@ -1,6 +1,6 @@
 import numpy as np 
 import time
-from dobot_handler import dobot_handler
+from dobotserver.dobot_handler import dobot_handler
 
 def calculate_rotation_factor(angle_list, rotation_list):
     if len(angle_list) != len(rotation_list):

@@ -6,8 +6,8 @@ import numpy as np
 import os
 import json
 
-alarmControllerFile="files/alarm_controller.json"
-alarmServoFile="files/alarm_servo.json"
+alarmControllerFile="/home/pi/dobot_screw_demo/dobotserver/files/alarm_controller.json"
+alarmServoFile="/home/pi/dobot_screw_demo/dobotserver/files/alarm_servo.json"
 
 # Port Feedback
 MyType=np.dtype([('len', np.int16, ), 
