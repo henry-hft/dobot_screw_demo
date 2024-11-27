@@ -19,12 +19,13 @@ def sort_corners(corners):
     return [array1, array2, array3, array4]
 
 def process_frame(frame):
-    aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_250)
-    aruco_params = cv2.aruco.DetectorParameters_create()
-
+    aruco_dict = cv2.aruco.getPredefinedDictionary(cv.aruco.DICT_4X4_250)
+    aruco_params =  cv2.aruco.DetectorParameters()
+    aruco_detector = cv2.aruco.ArucoDetector(aruco_dict, aruco_params)
+    
    # frame = undistort_image (frame )
     grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    corners, ids, _ = cv2.aruco.detectMarkers(grey, aruco_dict, parameters=aruco_params)
+    corners, ids, _ = detector.detectMarkers(grey)
     
     ref_points = []
     if ids is not None and 2 <= len(ids) <= 4:
