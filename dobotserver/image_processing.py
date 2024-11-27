@@ -2,7 +2,7 @@ import cv2 as cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-import draw
+import dobotserver.draw
 from PIL import Image
 import math
 import imutils
@@ -39,7 +39,7 @@ def pres_crop_four_points(image_or_path, marker_coord):
     M = cv2.getPerspectiveTransform(rectangle, dst)
     transformed = cv2.warpPerspective(img, M, (max_width, max_height))
 
-    #transformed_image_path = "./images/"+ 'transformed_image.jpg' 
+    #transformed_image_path = "/home/pi/dobot_screw_demo/images/"+ 'transformed_image.jpg' 
     #cv2.imwrite(transformed_image_path, transformed)
     return transformed
 
@@ -70,7 +70,7 @@ def Grayscale(ImageSrc, Classify=False):
   gray_im = cv2.cvtColor(ImageSrc, cv2.COLOR_RGB2GRAY)
   
   if not Classify:
-      cv2.imwrite("./images/" + 'gray_im.jpg' , gray_im)
+      cv2.imwrite("/home/pi/dobot_screw_demo/images/" + 'gray_im.jpg' , gray_im)
 			
   return(gray_im)
 
@@ -78,7 +78,7 @@ def GammaCorrection(ImageSrc, Classify=False, Y=0.4):
     gammaCorrection = np.array(255 * (ImageSrc / 255) ** Y, dtype='uint8')
     
     if not Classify:
-        filename = "./images/gammaCorrection.jpg"
+        filename = "/home/pi/dobot_screw_demo/images/gammaCorrection.jpg"
         cv2.imwrite(filename, gammaCorrection)
 				
     return gammaCorrection
@@ -88,7 +88,7 @@ def Threshold(ImageSrc, Classify=False, MaxValue = 255, BlockSize = 255, C = 19)
   thresh = cv2.bitwise_not(thresh)
   
   if not Classify:
-      cv2.imwrite("./images/" + 'thresh.jpg' , thresh)
+      cv2.imwrite("/home/pi/dobot_screw_demo/images/" + 'thresh.jpg' , thresh)
 			
   return(thresh)
 
@@ -100,7 +100,7 @@ def MorphOperation(ImageSrc, Classify=False, Size = 15, BlurSize = 7):
   # clean all noise after dilatation and erosion
   img_erode = cv2.medianBlur(img_erode, BlurSize)
   if not Classify:
-    cv2.imwrite("./images/" + 'morphOperation.jpg' , img_erode)
+    cv2.imwrite("/home/pi/dobot_screw_demo/images/" + 'morphOperation.jpg' , img_erode)
     
   return(img_erode)
   
@@ -115,7 +115,7 @@ def AutoCanny(ImageSrc, Classify=False, sigma=0.33):
         
 	edged = cv2.Canny(ImageSrc, lower, upper)
 	if not Classify:
-		cv2.imwrite("./images/" + 'autoCanny.jpg' , edged)
+		cv2.imwrite("/home/pi/dobot_screw_demo/images/" + 'autoCanny.jpg' , edged)
 		
 	return(edged)
 
@@ -267,7 +267,7 @@ def obj_recognition(image_or_path):
     morph = MorphOperation(thresh)
     canny = AutoCanny(morph)
     contours, cen_coor_map = FindContours(canny, img)
-    cv2.imwrite("./images/" +'contours.jpg', contours)
+    cv2.imwrite("/home/pi/dobot_screw_demo/images/" +'contours.jpg', contours)
     print('finish')
     return cen_coor_map
 
