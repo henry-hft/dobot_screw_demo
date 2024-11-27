@@ -46,3 +46,4 @@ python -m pip install tensorflow
 python -m pip install keras
 python -m pip install opencv-python
 python -m pip install flask
+python -m pip install matplotlib
