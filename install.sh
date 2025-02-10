@@ -61,4 +61,4 @@ python -m pip install rpi-kms
 python -m pip install picamera2
 python -m pip install numpy==1.26.4
 
-sudo chmod 777 images/
+sudo chown -R .
