@@ -19,7 +19,7 @@ def sort_corners(corners):
     return [array1, array2, array3, array4]
 
 def process_frame(frame):
-    aruco_dict = cv2.aruco.getPredefinedDictionary(cv.aruco.DICT_4X4_250)
+    aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_250)
     aruco_params =  cv2.aruco.DetectorParameters()
     aruco_detector = cv2.aruco.ArucoDetector(aruco_dict, aruco_params)
     
