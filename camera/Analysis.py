@@ -25,7 +25,7 @@ def process_frame(frame):
     
    # frame = undistort_image (frame )
     grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    corners, ids, _ = detector.detectMarkers(grey)
+    corners, ids, _ = aruco_detector.detectMarkers(grey)
     
     ref_points = []
     if ids is not None and 2 <= len(ids) <= 4:
