@@ -57,7 +57,7 @@ class dobot_handler:
     
     def getErrorMessage(self):
         dataController, dataServo = alarmAlarmJsonFile()
-        geterrorID = self.parseResultId(self.move.GetErrorID())
+        geterrorID = self.parseResultId(self.dashboard.GetErrorID())
         if geterrorID[0] == 0:
             for i in range(1, len(geterrorID)):
                 for item in dataController:
