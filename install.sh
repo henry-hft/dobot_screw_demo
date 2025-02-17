@@ -4,6 +4,7 @@
 ETH_INTERFACE="eth0"
 DOBOT_IP="192.168.1.6"
 PI_IP="192.168.1.5"
+GATEWAY="192.168.1.1"
 
 echo "Configuring Ethernet for the dobot connection..."
 sudo ip link set $ETH_INTERFACE up
@@ -11,6 +12,9 @@ sudo ip addr add $PI_IP/24 dev $ETH_INTERFACE
 
 # Add route to ensure Ethernet is used only for the local connection to the dobot
 sudo ip route add $DOBOT_IP dev $ETH_INTERFACE
+
+# Set the default gateway
+sudo ip route add default via $GATEWAY dev $ETH_INTERFACE
 
 # Update package list
 sudo apt-get update
