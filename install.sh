@@ -1,23 +1,67 @@
 #!/bin/bash
 
-# Ethernet configuration to connect to the dobot
-ETH_INTERFACE="eth0"
-DOBOT_IP="192.168.1.6"
-PI_IP="192.168.1.5"
-GATEWAY="192.168.1.1"
-
-echo "Configuring Ethernet for the dobot connection..."
-sudo ip link set $ETH_INTERFACE up
-sudo ip addr add $PI_IP/24 dev $ETH_INTERFACE
-
-# Add route to ensure Ethernet is used only for the local connection to the dobot
-sudo ip route add $DOBOT_IP dev $ETH_INTERFACE
-
-# Set the default gateway
-sudo ip route add default via $GATEWAY dev $ETH_INTERFACE
-
 # Update package list
 sudo apt-get update
+
+sudo apt install ifupdown -y
+sudo systemctl disable --now NetworkManager
+
+# Target system config file
+INTERFACES_FILE="/etc/network/interfaces"
+
+# Interfaces
+WLAN_IFACE="wlan0"
+ETH_IFACE="eth0"
+
+# Static IP configuration for eth0
+STATIC_IP="192.168.1.5"
+NETMASK="255.255.255.0"
+
+# Scan for networks
+echo "Scanning available Wi-Fi networks..."
+IFS=$'\n' read -d '' -r -a networks <<< "$(nmcli -t -f SSID dev wifi | grep -v '^$' | sort -u)"
+
+# Display networks
+echo "Found networks:"
+for i in "${!networks[@]}"; do
+    echo "$((i+1))) ${networks[$i]}"
+done
+
+# User selects network
+read -p "Please enter the number of the network you want to connect to: " choice
+
+# Validate input
+if ! [[ "$choice" =~ ^[0-9]+$ ]] || (( choice < 1 || choice > ${#networks[@]} )); then
+    echo "Invalid selection."
+    exit 1
+fi
+
+SSID="${networks[$((choice-1))]}"
+read -s -p "Enter password for '$SSID': " PASSWORD
+echo
+
+# Create config content
+CONFIG_CONTENT=$(cat <<EOF
+auto lo
+iface lo inet loopback
+
+auto $WLAN_IFACE
+iface $WLAN_IFACE inet dhcp
+    wpa-ssid "$SSID"
+    wpa-psk "$PASSWORD"
+
+auto $ETH_IFACE
+iface $ETH_IFACE inet static
+    address $STATIC_IP
+    netmask $NETMASK
+EOF
+)
+
+# Write to /etc/network/interfaces using sudo
+echo "Writing new network configuration..."
+echo "$CONFIG_CONTENT" | sudo tee "$INTERFACES_FILE" > /dev/null
+
+echo "Network configuration has been written to $INTERFACES_FILE."
 
 # Install required packages
 sudo apt-get install -y python3-numpy
@@ -44,7 +88,6 @@ sudo apt-get install -y libcamera-dev
 sudo apt-get install -y libkms++-dev 
 sudo apt-get install -y libfmt-dev 
 sudo apt-get install -y libdrm-dev
-
 
 # Create virtual environment
 virtualenv --system-site-packages dobot
