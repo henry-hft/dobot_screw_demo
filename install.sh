@@ -63,6 +63,10 @@ echo "$CONFIG_CONTENT" | sudo tee "$INTERFACES_FILE" > /dev/null
 
 echo "Network configuration has been written to $INTERFACES_FILE."
 
+systemctl unmask networking
+systemctl enable networking
+systemctl restart networking
+
 # Install required packages
 sudo apt-get install -y python3-numpy
 sudo apt-get install -y libblas-dev
