@@ -3,9 +3,6 @@
 # Update package list
 sudo apt-get update
 
-sudo apt install ifupdown -y
-sudo systemctl disable --now NetworkManager
-
 # Target system config file
 INTERFACES_FILE="/etc/network/interfaces"
 
@@ -39,6 +36,9 @@ fi
 SSID="${networks[$((choice-1))]}"
 read -s -p "Enter password for '$SSID': " PASSWORD
 echo
+
+sudo apt install ifupdown -y
+sudo systemctl disable --now NetworkManager
 
 # Create config content
 CONFIG_CONTENT=$(cat <<EOF
