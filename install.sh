@@ -63,6 +63,8 @@ echo "$CONFIG_CONTENT" | sudo tee "$INTERFACES_FILE" > /dev/null
 
 echo "Network configuration has been written to $INTERFACES_FILE."
 
+ifdown --force wlan0 lo
+ifup -a
 systemctl unmask networking
 systemctl enable networking
 systemctl restart networking
